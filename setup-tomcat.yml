@@ -1,0 +1,31 @@
+---
+- name: setup tomcat
+  hosts: all
+  become: true
+  tasks:
+  -  name: install
+     yum:
+       name: java
+       state: installed
+     when: ansible_os_family == "RedHat"
+
+  - name: download tomcat package
+    get_url:
+      url: https://downloads.apache.org/tomcat/tomcat-9/v9.0.59/bin/apache-tomcat-9.0.59.tar.gz
+      dest: /opt
+  - name: untar apache packages
+    unarchive:
+      src: /opt/apache-tomcat-9.0.59.tar.gz
+      dest: /opt
+      remote_src: yes
+
+  - name: add exec permi on startup.sh file
+    file:
+      path: /opt/apache-tomcat-9.0.59/bin/startup.sh
+      mode: 0777
+
+  - name: start tomcat services
+    shell: nohup ./startup.sh
+    args:
+      chdir: /opt/apache-tomcat-9.0.59/bin
+

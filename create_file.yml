@@ -1,0 +1,10 @@
+
+---
+- name: creates a file r direc
+  hosts: all
+    #become: true
+  tasks:
+  - name: creating a file
+    file:
+      path: /home/ansadmin/dir1
+      state: absent
